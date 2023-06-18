@@ -22,7 +22,11 @@ app.post('/', (req, res) => {
     email, number
   } = req.body;
 
-  const filteredUsers = users.filter((user) => user.email === email);
-
-  res.status(200).send(JSON.stringify(filteredUsers));
+  let filteredUsers = users.filter((user) => user.email === email);
+  if (number === '' || number == null) {
+    res.status(200).send(JSON.stringify(filteredUsers));
+  } else {
+    filteredUsers = users.filter((user) => user.number === number);
+    res.status(200).send(JSON.stringify(filteredUsers));
+  }
 });
