@@ -3,6 +3,7 @@ const cors = require('cors');
 const { users } = require('./db.js');
 const bodyParser = require('body-parser');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const handleError = require('./middlewares/handleError');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -37,12 +38,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 app.post('/', async (req, res) => {
-  const {
-    email, number
-  } = req.body;
+  try {
+    const {
+      email, number
+    } = req.body;
+    const filteredUsers = await findUsers(email, number, users);
 
-  const filteredUsers = await findUsers(email, number, users);
-  res.status(200).send(JSON.stringify(filteredUsers));
+    res.status(200).send(JSON.stringify(filteredUsers));
+  } catch (err) {
+    err => next(err);
+  }
 });
 
 app.use(errorLogger);
+
+app.use((err, req, res, next) => {
+  res.status(err.statusCode).send({ message: err.message });
+  console.error(err);
+  handleError(err, res, next);
+});
