@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { users } = require('./db.js');
 const bodyParser = require('body-parser');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -33,6 +34,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(requestLogger);
+
 app.post('/', async (req, res) => {
   const {
     email, number
@@ -41,3 +44,5 @@ app.post('/', async (req, res) => {
   const filteredUsers = await findUsers(email, number, users);
   res.status(200).send(JSON.stringify(filteredUsers));
 });
+
+app.use(errorLogger);
