@@ -5,6 +5,7 @@ npm-debug.log*
 
 # Dependency directory
 node_modules
+dist
 
 # Optional npm cache directory
 .npm
@@ -14,4 +15,3 @@ node_modules
 .DS_Store
 .idea
 .vscode
-dist
