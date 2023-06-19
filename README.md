@@ -4,7 +4,8 @@
 
 Одностраничное приложение — поисковик по пользователям.
 Использовала: `Express`, `Node.js`, `TypeScript`, `JavaScript`, `ESLint`, `Editorconfig`, `REST API`,
-`Postman`, `Winston`, `Create-react-app`, `ESLint`.
+`Postman`, `Winston`, `Create-react-app`, `ESLint`, `Nodemon`, `Joi`,
+`Celebrate`, `Express-rate-limit`.
 
 ### Структура
 Приложение состоит из двух частей:
@@ -14,3 +15,4 @@
 
 ### Функциональность
 * поиск по базе пользователей
+* валидация
