@@ -46,7 +46,7 @@ app.post('/', async (req, res) => {
 
     res.status(200).send(JSON.stringify(filteredUsers));
   } catch (err) {
-    err => next(err);
+    next(err);
   }
 });
 
