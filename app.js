@@ -5,7 +5,7 @@ const {
 } = require('celebrate');
 const bodyParser = require('body-parser');
 const { allUsers } = require('./db.ts');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { requestLogger, errorLogger } = require('./middlewares/logger.ts');
 const handleError = require('./middlewares/handleError');
 const { limiter } = require('./middlewares/limiter.ts');
 
