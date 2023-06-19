@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const { allUsers } = require('./db.ts');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const handleError = require('./middlewares/handleError');
-const { limiter } = require('./middlewares/limiter');
+const { limiter } = require('./middlewares/limiter.ts');
 
 const { PORT = 3000 } = process.env;
 const app = express();
