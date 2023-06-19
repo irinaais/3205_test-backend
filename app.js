@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const { users } = require('./db.js');
 const bodyParser = require('body-parser');
+const { allUsers } = require('./db.ts');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const handleError = require('./middlewares/handleError');
 
@@ -14,7 +14,9 @@ async function main() {
 }
 
 function delay(ms) {
-  return new Promise(res => setTimeout(res, ms))
+  return new Promise((res) => {
+    setTimeout(res, ms);
+  });
 }
 
 async function findUsers(email, number, users) {
@@ -23,10 +25,9 @@ async function findUsers(email, number, users) {
   let filteredUsers = users.filter((user) => user.email === email);
   if (number === '' || number == null) {
     return filteredUsers;
-  } else {
-    filteredUsers = users.filter((user) => user.number === number);
-    return filteredUsers;
   }
+  filteredUsers = users.filter((user) => user.number === number);
+  return filteredUsers;
 }
 
 main();
@@ -37,12 +38,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 
-app.post('/', async (req, res) => {
+app.post('/', async (req, res, next) => {
   try {
     const {
-      email, number
+      email, number,
     } = req.body;
-    const filteredUsers = await findUsers(email, number, users);
+    const filteredUsers = await findUsers(email, number, allUsers);
 
     res.status(200).send(JSON.stringify(filteredUsers));
   } catch (err) {
