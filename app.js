@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const { allUsers } = require('./db.ts');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const handleError = require('./middlewares/handleError');
+const { limiter } = require('./middlewares/limiter');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -36,6 +37,7 @@ async function findUsers(email, number, users) {
 main();
 
 app.use(cors());
+app.use(limiter);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
