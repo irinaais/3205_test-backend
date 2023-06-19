@@ -1,5 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const {
+  celebrate, Joi, errors, Segments,
+} = require('celebrate');
 const bodyParser = require('body-parser');
 const { allUsers } = require('./db.ts');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -38,7 +41,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 
-app.post('/', async (req, res, next) => {
+app.post('/', celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    email: Joi.string().email().required(),
+    number: Joi.string().optional().allow(''),
+  }),
+}), async (req, res, next) => {
   try {
     const {
       email, number,
@@ -50,7 +58,7 @@ app.post('/', async (req, res, next) => {
     next(err);
   }
 });
-
+app.use(errors());
 app.use(errorLogger);
 
 app.use((err, req, res, next) => {
