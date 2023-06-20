@@ -10,7 +10,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 const handleError = require('./middlewares/handleError.js');
 const { limiter } = require('./middlewares/limiter.js');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 const app: Express = express();
 
 async function main() {
