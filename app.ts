@@ -1,29 +1,30 @@
-const express = require('express');
+import {User, usersDb} from "./db";
+import express, {ErrorRequestHandler, Express, NextFunction, Request, Response} from 'express';
+
 const cors = require('cors');
 const {
   celebrate, Joi, errors, Segments,
 } = require('celebrate');
 const bodyParser = require('body-parser');
-const { allUsers } = require('./db.ts');
-const { requestLogger, errorLogger } = require('./middlewares/logger.ts');
-const handleError = require('./middlewares/handleError');
-const { limiter } = require('./middlewares/limiter.ts');
+const { requestLogger, errorLogger } = require('./middlewares/logger.js');
+const handleError = require('./middlewares/handleError.js');
+const { limiter } = require('./middlewares/limiter.js');
 
 const { PORT = 3000 } = process.env;
-const app = express();
+const app: Express = express();
 
 async function main() {
   await app.listen(PORT);
   console.log(`Server listen on ${PORT}`);
 }
 
-function delay(ms) {
+function delay(ms: number) {
   return new Promise((res) => {
     setTimeout(res, ms);
   });
 }
 
-async function findUsers(email, number, users) {
+async function findUsers(email: string, number: string, users: User[]) {
   await delay(5000);
 
   let filteredUsers = users.filter((user) => user.email === email);
@@ -48,12 +49,12 @@ app.post('/', celebrate({
     email: Joi.string().email().required(),
     number: Joi.string().optional().allow(''),
   }),
-}), async (req, res, next) => {
+}), async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {
       email, number,
     } = req.body;
-    const filteredUsers = await findUsers(email, number, allUsers);
+    const filteredUsers = await findUsers(email, number, usersDb.allUsers);
 
     res.status(200).send(JSON.stringify(filteredUsers));
   } catch (err) {
@@ -63,8 +64,8 @@ app.post('/', celebrate({
 app.use(errors());
 app.use(errorLogger);
 
-app.use((err, req, res, next) => {
+const errorRequestHandler: ErrorRequestHandler = (err, req, res, next) => {
   res.status(err.statusCode).send({ message: err.message });
-  console.error(err);
   handleError(err, res, next);
-});
+}
+app.use(errorRequestHandler);

@@ -1,4 +1,13 @@
-module.exports = {
+export type User = {
+  email: string,
+  number: string,
+}
+
+export type UsersDb = {
+  allUsers: User[],
+}
+
+export const usersDb: UsersDb = {
   allUsers: [{
     email: 'jim@gmail.com',
     number: '221122',
